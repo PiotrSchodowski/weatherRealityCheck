@@ -8,20 +8,18 @@ import org.springframework.web.client.RestTemplate;
 import pl.schodowski.weatherRealityCheck.entity.ImgwWeatherDataEntity;
 import pl.schodowski.weatherRealityCheck.repository.ImgwWeatherDataRepository;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 @Service
 public class ImgwDataFetcher {
 
     private final RestTemplate restTemplate;
     private final String baseUrl;
-
-    private final String sniezkaStation = "sniezka";
-    private final String zakopaneStation = "zakopane";
-    private final String bielskoStation = "bielskobiala";
-    private final String kasprowyStation = "kasprowywierch";
-
-
     private final ImgwWeatherDataRepository repo;
 
+    private final List<String> stations = Arrays.asList("sniezka", "zakopane", "bielskobiala", "kasprowywierch");
 
     public ImgwDataFetcher(RestTemplate restTemplate, ImgwWeatherDataRepository repo) {
         this.restTemplate = restTemplate;
@@ -31,12 +29,20 @@ public class ImgwDataFetcher {
 
     @PostConstruct
     public void init() {
-        getImgwWeatherDataEntityFromApi();
+        stations.forEach(this::getImgwWeatherDataEntityFromApi);
     }
 
-    public ImgwWeatherDataEntity getImgwWeatherDataEntityFromApi() {
-        String url = baseUrl + sniezkaStation;
-        ResponseEntity<ImgwWeatherDataEntity> response = restTemplate.exchange(url, HttpMethod.GET, null, ImgwWeatherDataEntity.class);
-        return repo.save(response.getBody());
+    private void getImgwWeatherDataEntityFromApi(String station) {
+        try {
+            String url = buildUrlForStation(station);
+            ResponseEntity<ImgwWeatherDataEntity> response = restTemplate.exchange(url, HttpMethod.GET, null, ImgwWeatherDataEntity.class);
+            repo.save(Objects.requireNonNull(response.getBody()));
+        } catch (Exception e) {
+            e.printStackTrace();   //todo zrobic lepsza obsługe błędów
+        }
+    }
+
+    private String buildUrlForStation(String station) {
+        return baseUrl + station;
     }
 }
