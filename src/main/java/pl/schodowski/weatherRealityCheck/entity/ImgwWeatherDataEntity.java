@@ -37,5 +37,4 @@ public class ImgwWeatherDataEntity {
     @JsonProperty("suma_opadu")
     private float rainfallTotal;
 
-    private LocalDateTime fullDate;
 }

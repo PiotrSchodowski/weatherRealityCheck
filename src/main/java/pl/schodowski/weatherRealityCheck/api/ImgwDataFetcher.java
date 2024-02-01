@@ -1,13 +1,17 @@
 package pl.schodowski.weatherRealityCheck.api;
 
-import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.schodowski.weatherRealityCheck.entity.ImgwWeatherDataEntity;
 import pl.schodowski.weatherRealityCheck.repository.ImgwWeatherDataRepository;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -18,8 +22,13 @@ public class ImgwDataFetcher {
     private final RestTemplate restTemplate;
     private final String baseUrl;
     private final ImgwWeatherDataRepository repo;
-
+    private static final Logger log = LoggerFactory.getLogger(ImgwDataFetcher.class);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     private final List<String> stations = Arrays.asList("sniezka", "zakopane", "bielskobiala", "kasprowywierch");
+
+    //    private static final String CRON_SCHEDULE = "0 0 9 * * *"; // aktualizacja o 9 rano
+    private static final String CRON_SCHEDULE = "0 */5 * * * *";
+
 
     public ImgwDataFetcher(RestTemplate restTemplate, ImgwWeatherDataRepository repo) {
         this.restTemplate = restTemplate;
@@ -27,10 +36,12 @@ public class ImgwDataFetcher {
         this.repo = repo;
     }
 
-    @PostConstruct
-    public void init() {
+
+    @Scheduled(cron = CRON_SCHEDULE)
+    public void updateRealWeather() {
         stations.forEach(this::getImgwWeatherDataEntityFromApi);
     }
+
 
     private void getImgwWeatherDataEntityFromApi(String station) {
         try {
@@ -38,9 +49,10 @@ public class ImgwDataFetcher {
             ResponseEntity<ImgwWeatherDataEntity> response = restTemplate.exchange(url, HttpMethod.GET, null, ImgwWeatherDataEntity.class);
             repo.save(Objects.requireNonNull(response.getBody()));
         } catch (Exception e) {
-            e.printStackTrace();   //todo zrobic lepsza obsługe błędów
+            log.error("An error occurred while updating weather for station {}: {}", station, e.getMessage());
         }
     }
+
 
     private String buildUrlForStation(String station) {
         return baseUrl + station;
