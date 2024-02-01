@@ -11,7 +11,6 @@ import pl.schodowski.weatherRealityCheck.entity.ImgwWeatherDataEntity;
 import pl.schodowski.weatherRealityCheck.repository.ImgwWeatherDataRepository;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -21,33 +20,33 @@ public class ImgwDataFetcher {
 
     private final RestTemplate restTemplate;
     private final String baseUrl;
-    private final ImgwWeatherDataRepository repo;
+    private final ImgwWeatherDataRepository repository;
     private static final Logger log = LoggerFactory.getLogger(ImgwDataFetcher.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     private final List<String> stations = Arrays.asList("sniezka", "zakopane", "bielskobiala", "kasprowywierch");
 
-    //    private static final String CRON_SCHEDULE = "0 0 9 * * *"; // aktualizacja o 9 rano
-    private static final String CRON_SCHEDULE = "0 */5 * * * *";
+    private static final String CRON_SCHEDULE = "0 0 9 * * *"; // aktualizacja o 9 rano
+//    private static final String CRON_SCHEDULE = "0 */5 * * * *";
 
 
-    public ImgwDataFetcher(RestTemplate restTemplate, ImgwWeatherDataRepository repo) {
+    public ImgwDataFetcher(RestTemplate restTemplate, ImgwWeatherDataRepository repository) {
         this.restTemplate = restTemplate;
         this.baseUrl = "https://danepubliczne.imgw.pl/api/data/synop/station/";
-        this.repo = repo;
+        this.repository = repository;
     }
 
 
     @Scheduled(cron = CRON_SCHEDULE)
     public void updateRealWeather() {
-        stations.forEach(this::getImgwWeatherDataEntityFromApi);
+        stations.forEach(this::saveImgwWeatherDataEntityFromApi);
     }
 
 
-    private void getImgwWeatherDataEntityFromApi(String station) {
+    private void saveImgwWeatherDataEntityFromApi(String station) {
         try {
             String url = buildUrlForStation(station);
             ResponseEntity<ImgwWeatherDataEntity> response = restTemplate.exchange(url, HttpMethod.GET, null, ImgwWeatherDataEntity.class);
-            repo.save(Objects.requireNonNull(response.getBody()));
+            repository.save(Objects.requireNonNull(response.getBody()));
         } catch (Exception e) {
             log.error("An error occurred while updating weather for station {}: {}", station, e.getMessage());
         }
