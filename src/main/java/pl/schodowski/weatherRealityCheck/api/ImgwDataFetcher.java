@@ -1,5 +1,6 @@
 package pl.schodowski.weatherRealityCheck.api;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -25,7 +26,7 @@ public class ImgwDataFetcher {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     private final List<String> stations = Arrays.asList("sniezka", "zakopane", "bielskobiala", "kasprowywierch");
 
-    private static final String CRON_SCHEDULE = "0 0 9 * * *"; // aktualizacja o 9 rano
+    private static final String CRON_SCHEDULE = "0 0 */4 * * *";
 //    private static final String CRON_SCHEDULE = "0 */5 * * * *";
 
 
@@ -38,6 +39,12 @@ public class ImgwDataFetcher {
 
     @Scheduled(cron = CRON_SCHEDULE)
     public void updateRealWeather() {
+        stations.forEach(this::saveImgwWeatherDataEntityFromApi);
+    }
+
+
+    @PostConstruct
+    public void init(){
         stations.forEach(this::saveImgwWeatherDataEntityFromApi);
     }
 
