@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import pl.schodowski.weatherRealityCheck.entity.ImgwWeatherDataEntity;
 import pl.schodowski.weatherRealityCheck.repository.ImgwWeatherDataRepository;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -23,11 +22,10 @@ public class ImgwDataFetcher {
     private final String baseUrl;
     private final ImgwWeatherDataRepository repository;
     private static final Logger log = LoggerFactory.getLogger(ImgwDataFetcher.class);
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-    private final List<String> stations = Arrays.asList("sniezka", "zakopane", "bielskobiala", "kasprowywierch");
+    private final List<String> stations = Arrays.asList("zakopane", "bielskobiala");
 
-    private static final String CRON_SCHEDULE = "0 0 */4 * * *";
-//    private static final String CRON_SCHEDULE = "0 */5 * * * *";
+    private static final String CRON_SCHEDULE = "0 0 */4 * * *"; // 4 hours
+//    private static final String CRON_SCHEDULE = "0 */5 * * * *"; 5 minutes
 
 
     public ImgwDataFetcher(RestTemplate restTemplate, ImgwWeatherDataRepository repository) {
@@ -39,17 +37,17 @@ public class ImgwDataFetcher {
 
     @Scheduled(cron = CRON_SCHEDULE)
     public void updateRealWeather() {
-        stations.forEach(this::saveImgwWeatherDataEntityFromApi);
+        stations.forEach(this::saveImgwWeatherDataFromApi);
     }
 
 
     @PostConstruct
-    public void init(){
-        stations.forEach(this::saveImgwWeatherDataEntityFromApi);
+    public void init() {
+        stations.forEach(this::saveImgwWeatherDataFromApi);
     }
 
 
-    private void saveImgwWeatherDataEntityFromApi(String station) {
+    private void saveImgwWeatherDataFromApi(String station) {
         try {
             String url = buildUrlForStation(station);
             ResponseEntity<ImgwWeatherDataEntity> response = restTemplate.exchange(url, HttpMethod.GET, null, ImgwWeatherDataEntity.class);
