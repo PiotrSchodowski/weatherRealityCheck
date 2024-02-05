@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pl.schodowski.weatherRealityCheck.model.accuWeather.AccuWeatherPrediction;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AccuWeatherFetcher {
@@ -27,25 +29,13 @@ public class AccuWeatherFetcher {
         this.apiKey = "?apikey=ADwmIpoDktVRR5z9AnXszHCcGflutNL4&details=true&metric=true";
     }
 
-    public ResponseEntity<AccuWeatherPrediction> getAccuWeatherPredictionFromApi(String locationKey) {
-        try {
-            if (locationKey == null) {
-                throw new IllegalArgumentException("Location key cannot be null");
-            }
+    public List<AccuWeatherPrediction> getAccuWeatherPredictionFromApi(String locationKey) {
+        String url = buildUrlForLocation(locationKey);
+        ResponseEntity<AccuWeatherPrediction[]> response = restTemplate.exchange(url, HttpMethod.GET, null, AccuWeatherPrediction[].class);
+        return Arrays.asList(response.getBody());
 
-            String url = buildUrlForLocation(locationKey);
-            return restTemplate.exchange(url, HttpMethod.GET, null, AccuWeatherPrediction.class);
-
-        } catch (HttpClientErrorException e) {
-            // Obsługa błędów związanego z nieprawidłowym zapytaniem (np. 404 Not Found)
-            log.error("HTTP error while fetching AccuWeather data for locationKey {}: {}", locationKey, e.getMessage());
-            return ResponseEntity.status(e.getRawStatusCode()).body(null);
-        } catch (Exception e) {
-            // Obsługa ogólnych błędów
-            log.error("An unexpected error occurred while fetching AccuWeather data for locationKey {}: {}", locationKey, e.getMessage());
-            return ResponseEntity.status(500).body(null); // 500 Internal Server Error
-        }
     }
+
 
     private String buildUrlForLocation(String locationKey) {
         return baseUrl + locationKey + apiKey;
