@@ -5,8 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import pl.schodowski.weatherRealityCheck.entity.ImgwWeatherDataEntity;
+import pl.schodowski.weatherRealityCheck.model.accuWeather.AccuWeatherPrediction;
 
 @Service
 public class AccuWeatherFetcher {
@@ -17,7 +18,7 @@ public class AccuWeatherFetcher {
 
     private final String apiKey;
 
-    private static final Logger log = LoggerFactory.getLogger(ImgwDataFetcher.class);
+    private static final Logger log = LoggerFactory.getLogger(AccuWeatherFetcher.class);
 
 
     public AccuWeatherFetcher(RestTemplate restTemplate) {
@@ -26,15 +27,24 @@ public class AccuWeatherFetcher {
         this.apiKey = "?apikey=ADwmIpoDktVRR5z9AnXszHCcGflutNL4&details=true&metric=true";
     }
 
-    public ResponseEntity<ImgwWeatherDataEntity> getAccuWeatherPredictionFromApi(String locationKey) {
+    public ResponseEntity<AccuWeatherPrediction> getAccuWeatherPredictionFromApi(String locationKey) {
         try {
-            String url = buildUrlForLocation(locationKey);
-            return restTemplate.exchange(url, HttpMethod.GET, null, ImgwWeatherDataEntity.class);
+            if (locationKey == null) {
+                throw new IllegalArgumentException("Location key cannot be null");
+            }
 
+            String url = buildUrlForLocation(locationKey);
+            return restTemplate.exchange(url, HttpMethod.GET, null, AccuWeatherPrediction.class);
+
+        } catch (HttpClientErrorException e) {
+            // Obsługa błędów związanego z nieprawidłowym zapytaniem (np. 404 Not Found)
+            log.error("HTTP error while fetching AccuWeather data for locationKey {}: {}", locationKey, e.getMessage());
+            return ResponseEntity.status(e.getRawStatusCode()).body(null);
         } catch (Exception e) {
-            log.error("An error occurred while updating weather from AccuWeather for locationKey {}: {}", locationKey, e.getMessage());
+            // Obsługa ogólnych błędów
+            log.error("An unexpected error occurred while fetching AccuWeather data for locationKey {}: {}", locationKey, e.getMessage());
+            return ResponseEntity.status(500).body(null); // 500 Internal Server Error
         }
-        return null;
     }
 
     private String buildUrlForLocation(String locationKey) {
