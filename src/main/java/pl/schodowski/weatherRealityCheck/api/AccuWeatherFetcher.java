@@ -10,6 +10,7 @@ import pl.schodowski.weatherRealityCheck.model.accuWeather.AccuWeatherPrediction
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AccuWeatherFetcher {
@@ -29,11 +30,11 @@ public class AccuWeatherFetcher {
         this.apiKey = "?apikey=ADwmIpoDktVRR5z9AnXszHCcGflutNL4&details=true&metric=true";
     }
 
+
     public List<AccuWeatherPrediction> getAccuWeatherPredictionFromApi(String locationKey) {
         String url = buildUrlForLocation(locationKey);
         ResponseEntity<AccuWeatherPrediction[]> response = restTemplate.exchange(url, HttpMethod.GET, null, AccuWeatherPrediction[].class);
-        return Arrays.asList(response.getBody());
-
+        return Arrays.asList(Objects.requireNonNull(response.getBody()));
     }
 
 

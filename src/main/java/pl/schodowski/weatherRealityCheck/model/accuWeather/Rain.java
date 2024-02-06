@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Rain{
     @JsonProperty("Value")
-    public double value;
+    public float value;
     @JsonProperty("Unit")
     public String unit;
     @JsonProperty("UnitType")
