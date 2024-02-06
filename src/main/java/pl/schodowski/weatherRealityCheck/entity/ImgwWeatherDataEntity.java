@@ -26,7 +26,7 @@ public class ImgwWeatherDataEntity {
     @JsonProperty("data_pomiaru")
     private String date;
     @JsonProperty("godzina_pomiaru")
-    private String time;
+    private String timeOfMeasurement;
     @JsonProperty("temperatura")
     private float temperature;
     @JsonProperty("predkosc_wiatru")
