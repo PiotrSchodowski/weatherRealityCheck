@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.schodowski.weatherRealityCheck.api.AccuWeatherFetcher;
-import pl.schodowski.weatherRealityCheck.entity.AccuWeatherDataEntity;
+import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
 import pl.schodowski.weatherRealityCheck.model.accuWeather.AccuWeatherPrediction;
 import pl.schodowski.weatherRealityCheck.repository.AccuWeatherDataRepository;
 
@@ -34,37 +34,36 @@ public class WeatherDataPersistenceService {
     }
 
     @PostConstruct
-    public void saveForecastToDatabase() {
-        saveForecastForLocation(zakopaneLocationKey, "Zakopane");
-        saveForecastForLocation(bielskoLocationKey, "Bielsko-Biała");
-        saveForecastForLocation(korbielowLocationKey, "Korbielów");
+    public void enterLocationToSaving() {
+        getPredictionsForRecording(zakopaneLocationKey, "Zakopane");
+        getPredictionsForRecording(bielskoLocationKey, "Bielsko-Biała");
     }
 
 
-    private void saveForecastForLocation(String locationKey, String locationName) {
+    private void getPredictionsForRecording(String locationKey, String locationName) {
         List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
-            AccuWeatherDataEntity accuWeatherDataEntity12h = makeAccuWeatherDataEntityFromAccuWeatherPrediction(accuWeatherPredictions.get(11), locationName);
-            AccuWeatherDataEntity accuWeatherDataEntity2h = makeAccuWeatherDataEntityFromAccuWeatherPrediction(accuWeatherPredictions.get(1), locationName);
-            accuWeatherDataRepository.save(accuWeatherDataEntity12h);
-            accuWeatherDataRepository.save(accuWeatherDataEntity2h);
+            WeatherForecastEntity weatherForecastEntity12H = buildEntityBasedPrediction(accuWeatherPredictions.get(11), locationName);
+            WeatherForecastEntity weatherForecastEntity2H = buildEntityBasedPrediction(accuWeatherPredictions.get(1), locationName);
+            accuWeatherDataRepository.save(weatherForecastEntity12H);
+            accuWeatherDataRepository.save(weatherForecastEntity2H);
     }
 
 
-    private AccuWeatherDataEntity makeAccuWeatherDataEntityFromAccuWeatherPrediction(AccuWeatherPrediction accuWeatherPrediction, String locationName) {
-        AccuWeatherDataEntity accuWeatherDataEntity = new AccuWeatherDataEntity();
+    private WeatherForecastEntity buildEntityBasedPrediction(AccuWeatherPrediction accuWeatherPrediction, String locationName) {
+        WeatherForecastEntity weatherForecastEntity = new WeatherForecastEntity();
         LocalDateTime dateTime = LocalDateTime.parse(accuWeatherPrediction.dateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         String date = dateTime.toLocalDate().toString();
         int time = dateTime.getHour();
 
-        accuWeatherDataEntity.setDate(date);
-        accuWeatherDataEntity.setTimeOfForecast(time);
-        accuWeatherDataEntity.setName(locationName);
-        accuWeatherDataEntity.setTemperature(accuWeatherPrediction.temperature.value);
-        accuWeatherDataEntity.setWind(convertKmhToMs(accuWeatherPrediction.wind.speed.value));
-        accuWeatherDataEntity.setIntervalTime(calculateIntervalTime(dateTime));
-        setRainfallTotal(accuWeatherDataEntity, accuWeatherPrediction);
+        weatherForecastEntity.setDate(date);
+        weatherForecastEntity.setForecastTime(time);
+        weatherForecastEntity.setName(locationName);
+        weatherForecastEntity.setTemperature(accuWeatherPrediction.temperature.value);
+        weatherForecastEntity.setWind(convertKmhToMs(accuWeatherPrediction.wind.speed.value));
+        weatherForecastEntity.setIntervalTime(calculateIntervalTime(dateTime));
+        setRainfallTotal(weatherForecastEntity, accuWeatherPrediction);
 
-        return accuWeatherDataEntity;
+        return weatherForecastEntity;
     }
 
 
@@ -75,12 +74,12 @@ public class WeatherDataPersistenceService {
     }
 
 
-    private void setRainfallTotal(AccuWeatherDataEntity accuWeatherDataEntity, AccuWeatherPrediction accuWeatherPrediction) {
+    private void setRainfallTotal(WeatherForecastEntity weatherForecastEntity, AccuWeatherPrediction accuWeatherPrediction) {
         if (accuWeatherPrediction.hasPrecipitation) {
             if (accuWeatherPrediction.precipitationType.equals("Rain")) {
-                accuWeatherDataEntity.setRainfallTotal(accuWeatherPrediction.rain.value);
+                weatherForecastEntity.setRainfallTotal(accuWeatherPrediction.rain.value);
             } else if (accuWeatherPrediction.precipitationType.equals("Snow")) {
-                accuWeatherDataEntity.setRainfallTotal(accuWeatherPrediction.snow.value);
+                weatherForecastEntity.setRainfallTotal(accuWeatherPrediction.snow.value);
             }
         }
     }
