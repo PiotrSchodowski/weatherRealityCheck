@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
 
 @Repository
-public interface AccuWeatherDataRepository extends JpaRepository<WeatherForecastEntity, Long> {
+public interface WeatherForecastRepository extends JpaRepository<WeatherForecastEntity, Long> {
 }
