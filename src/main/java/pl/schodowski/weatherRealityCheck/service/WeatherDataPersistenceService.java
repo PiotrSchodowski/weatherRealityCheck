@@ -19,19 +19,16 @@ public class WeatherDataPersistenceService {
     private final AccuWeatherConversionService accuWeatherConversionService;
     private final String zakopaneLocationKey;
     private final String bielskoLocationKey;
-    private final String korbielowLocationKey;
     private static final String CRON_SCHEDULE = "0 */5 * * * *";
 
     public WeatherDataPersistenceService(AccuWeatherFetcher accuWeatherFetcher, WeatherForecastRepository weatherForecastRepository,
                                          @Value("${zakopaneLocationForAccuWeather}") String zakopaneLocationKey,
                                          @Value("${bielskoLocationForAccuWeather}") String bielskoLocationKey,
-                                         @Value("${korbielowLocationForAccuWeather}") String korbielowLocationKey,
                                          AccuWeatherConversionService accuWeatherConversionService) {
         this.accuWeatherFetcher = accuWeatherFetcher;
         this.weatherForecastRepository = weatherForecastRepository;
         this.zakopaneLocationKey = zakopaneLocationKey;
         this.bielskoLocationKey = bielskoLocationKey;
-        this.korbielowLocationKey = korbielowLocationKey;
         this.accuWeatherConversionService = accuWeatherConversionService;
     }
 
