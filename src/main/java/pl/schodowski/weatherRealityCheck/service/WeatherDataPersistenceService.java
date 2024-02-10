@@ -8,6 +8,7 @@ import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
 import pl.schodowski.weatherRealityCheck.model.accuWeather.AccuWeatherPrediction;
 import pl.schodowski.weatherRealityCheck.repository.WeatherForecastRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,22 +43,20 @@ public class WeatherDataPersistenceService {
 
     private void getPredictionsForRecording(String locationKey, String locationName) {
         List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
-            WeatherForecastEntity weatherForecastEntity12H = accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(11), locationName);
-            WeatherForecastEntity weatherForecastEntity2H = accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(1), locationName);
-            weatherForecastRepository.save(weatherForecastEntity12H);
-            weatherForecastRepository.save(weatherForecastEntity2H);
+        List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
 
-            // make list from entities
+        weatherForecastEntityList.add(accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(11), locationName));
+        weatherForecastEntityList.add(accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(1), locationName));
+
+        saveEntities(weatherForecastEntityList);
+
     }
 
-    private void saveEntities(List<WeatherForecastEntity> weatherForecastEntities){
-        for(WeatherForecastEntity weatherForecastEntity : weatherForecastEntities){
+    private void saveEntities(List<WeatherForecastEntity> weatherForecastEntities) {
+        for (WeatherForecastEntity weatherForecastEntity : weatherForecastEntities) {
             weatherForecastRepository.save(weatherForecastEntity);
         }
     }
-
-
-
 
 
 }
