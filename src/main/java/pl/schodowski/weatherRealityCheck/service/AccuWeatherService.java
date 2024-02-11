@@ -6,7 +6,8 @@ import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
 @Service
 public class AccuWeatherService {
 
-    public WeatherForecastEntity getEntityFromPrediction(String locationName, int predictionTime){
-
+    public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime){
+        System.out.println(locationName + " " + predictionTime);
+        return new WeatherForecastEntity();
     }
 }

@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class LocationTimePair {
     private String locationName;
-    private int predictionTime;
+    private String predictionTime;
 }
 
