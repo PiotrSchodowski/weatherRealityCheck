@@ -11,17 +11,17 @@ import java.util.ArrayList;
 public class Data1h{
     public ArrayList<String> time;
     public ArrayList<Float> precipitation;
-    public ArrayList<Float> snowfraction;
-    public ArrayList<String> rainspot;
+    public ArrayList<Float> snowFraction;
+    public ArrayList<String> rainSpot;
     public ArrayList<Float> temperature;
-    public ArrayList<Float> felttemperature;
-    public ArrayList<Integer> pictocode;
-    public ArrayList<Float> windspeed;
-    public ArrayList<Integer> winddirection;
-    public ArrayList<Integer> relativehumidity;
-    public ArrayList<Float> sealevelpressure;
+    public ArrayList<Float> feltTemperature;
+    public ArrayList<Integer> pictoCode;
+    public ArrayList<Float> windSpeed;
+    public ArrayList<Integer> windDirection;
+    public ArrayList<Integer> relativeHumidity;
+    public ArrayList<Float> seaLevelPressure;
     public ArrayList<Integer> precipitation_probability;
     public ArrayList<Float> convective_precipitation;
-    public ArrayList<Integer> isdaylight;
-    public ArrayList<Integer> uvindex;
+    public ArrayList<Integer> isDayLight;
+    public ArrayList<Integer> uvIndex;
 }

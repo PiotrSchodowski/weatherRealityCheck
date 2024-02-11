@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Root{
+public class MeteoBluePrediction{
     public Metadata metadata;
     public Units units;
-    public Data1h data_1h;
+    public Data1h data1h;
 }

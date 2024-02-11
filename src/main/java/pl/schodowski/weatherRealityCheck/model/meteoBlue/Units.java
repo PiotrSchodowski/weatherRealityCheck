@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Units{
     public String time;
-    public String precipitation_probability;
+    public String precipitationProbability;
     public String pressure;
     public String relativeHumidity;
     public String co;
