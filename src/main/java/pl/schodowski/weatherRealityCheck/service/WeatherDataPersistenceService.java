@@ -55,7 +55,7 @@
 //        List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
 //        List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
 //
-//        weatherForecastEntityList.add(accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(11), locationName));
+    //        weatherForecastEntityList.add(accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(11), locationName));
 //        weatherForecastEntityList.add(accuWeatherConversionService.buildEntityBasedPrediction(accuWeatherPredictions.get(1), locationName));
 //
 //    }
