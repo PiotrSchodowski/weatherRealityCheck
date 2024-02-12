@@ -66,3 +66,29 @@
 //
 //}
 //
+//public class WeatherForecast {
+//
+//    public static void main(String[] args) {
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            // Załóżmy, że "path_to_json" to ścieżka do pliku JSON
+//            Map<String, Object> map = mapper.readValue(new File("path_to_json"), Map.class);
+//            Map<String, Object> data1h = (Map<String, Object>) map.get("data_1h");
+//            String[] times = (String[]) data1h.get("time");
+//            double[] temperatures = (double[]) data1h.get("temperature");
+//
+//            // Zakładając, że "hoursFromNow" to liczba godzin od teraz
+//            int hoursFromNow = 5; // przykładowa wartość
+//            if (hoursFromNow < times.length) {
+//                String forecastTime = times[hoursFromNow];
+//                double forecastTemperature = temperatures[hoursFromNow];
+//
+//                System.out.println("Prognoza na " + forecastTime + ":");
+//                System.out.println("Temperatura: " + forecastTemperature + "°C");
+//                // Tutaj można dodać więcej szczegółów prognozy, jeśli są potrzebne
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}

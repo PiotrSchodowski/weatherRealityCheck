@@ -29,19 +29,21 @@ public class AccuWeatherService {
         int predictionTimeInt = Integer.parseInt(predictionTime);
 
         locationKey = "Zakopane".equals(locationName) ? locationKeyForZakopane : locationKeyForBielsko;
-
         List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
+
         return buildEntityBasedPrediction(accuWeatherPredictions.get(predictionTimeInt - 1), locationName);
     }
 
+
     WeatherForecastEntity buildEntityBasedPrediction(AccuWeatherPrediction accuWeatherPrediction, String locationName) {
+
         WeatherForecastEntity weatherForecastEntity = new WeatherForecastEntity();
         LocalDateTime dateTime = LocalDateTime.parse(accuWeatherPrediction.dateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        String date = dateTime.toLocalDate().toString();
-        int time = dateTime.getHour();
+        String forecastDate = dateTime.toLocalDate().toString();
+        int forecastTime = dateTime.getHour();
 
-        weatherForecastEntity.setDate(date);
-        weatherForecastEntity.setForecastTime(time);
+        weatherForecastEntity.setDate(forecastDate);
+        weatherForecastEntity.setForecastTime(forecastTime);
         weatherForecastEntity.setName(locationName);
         weatherForecastEntity.setTemperature(accuWeatherPrediction.temperature.value);
         weatherForecastEntity.setWind(convertKmhToMs(accuWeatherPrediction.wind.speed.value));
@@ -69,6 +71,7 @@ public class AccuWeatherService {
             }
         }
     }
+
 
     private long convertKmhToMs(float kmh) {
         return Math.round(kmh * (1000.0f / 3600.0f));

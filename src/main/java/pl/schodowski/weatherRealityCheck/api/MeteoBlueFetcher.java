@@ -31,6 +31,7 @@ public class MeteoBlueFetcher {
         return response.getBody();
     }
 
+
     private String buildUrlForLocation(String lon, String lat) {
         return baseUrl + apiKey + "&lat=" + lat + "&lon=" + lon + "&asl=266&timestep=1h&format=json&numdays=1&location_list=name:Current%20Location";
     }

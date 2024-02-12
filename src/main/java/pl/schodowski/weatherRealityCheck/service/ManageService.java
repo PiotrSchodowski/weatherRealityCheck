@@ -16,6 +16,7 @@ public class ManageService {
 
     private final WeatherForecastRepository weatherForecastRepository;
     private final AccuWeatherService accuWeatherService;
+    private final MeteoBlueService meteoBlueService;
     private final List<LocationTimePair> locationTimePairs;
     List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
 
@@ -24,7 +25,7 @@ public class ManageService {
                          @Value("${predictionTime1}") String predictionTime1,
                          @Value("${predictionTime2}") String predictionTime2,
                          WeatherForecastRepository weatherForecastRepository,
-                         AccuWeatherService accuWeatherService){
+                         AccuWeatherService accuWeatherService,MeteoBlueService meteoBlueService){
         this.locationTimePairs = Arrays.asList(
                 new LocationTimePair(locationName1, predictionTime1),
                 new LocationTimePair(locationName2, predictionTime2),
@@ -33,6 +34,7 @@ public class ManageService {
         );
         this.weatherForecastRepository = weatherForecastRepository;
         this.accuWeatherService = accuWeatherService;
+        this.meteoBlueService = meteoBlueService;
     }
 
     @PostConstruct
@@ -46,6 +48,7 @@ public class ManageService {
 
     private List<WeatherForecastEntity> distributor(LocationTimePair pair) {
         weatherForecastEntityList.add(accuWeatherService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
+//        weatherForecastEntityList.add(meteoBlueService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime())); // limit calls
         return weatherForecastEntityList;
     }
 

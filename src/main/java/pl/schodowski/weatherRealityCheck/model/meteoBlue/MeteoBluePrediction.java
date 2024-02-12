@@ -1,5 +1,6 @@
 package pl.schodowski.weatherRealityCheck.model.meteoBlue;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MeteoBluePrediction{
+
     public Metadata metadata;
+
     public Units units;
+
+    @JsonProperty("data_1h")
     public Data1h data1h;
 }

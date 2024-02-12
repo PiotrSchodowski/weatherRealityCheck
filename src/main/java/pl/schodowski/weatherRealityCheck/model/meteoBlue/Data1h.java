@@ -1,5 +1,6 @@
 package pl.schodowski.weatherRealityCheck.model.meteoBlue;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class Data1h{
     public ArrayList<Float> temperature;
     public ArrayList<Float> feltTemperature;
     public ArrayList<Integer> pictoCode;
+//    @JsonProperty("wind_speed")
     public ArrayList<Float> windSpeed;
     public ArrayList<Integer> windDirection;
     public ArrayList<Integer> relativeHumidity;
