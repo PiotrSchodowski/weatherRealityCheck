@@ -48,7 +48,7 @@ public class ManageService {
 
     private List<WeatherForecastEntity> distributor(LocationTimePair pair) {
         weatherForecastEntityList.add(accuWeatherService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
-//        weatherForecastEntityList.add(meteoBlueService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime())); // limit calls
+        weatherForecastEntityList.add(meteoBlueService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime())); // limit calls
         return weatherForecastEntityList;
     }
 
