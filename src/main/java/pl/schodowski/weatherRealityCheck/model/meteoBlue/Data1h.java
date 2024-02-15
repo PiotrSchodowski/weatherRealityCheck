@@ -18,7 +18,7 @@ public class Data1h{
     public ArrayList<Float> feltTemperature;
     public ArrayList<Integer> pictoCode;
 //    @JsonProperty("wind_speed")
-    public ArrayList<Float> windSpeed;
+    public ArrayList<Float> windspeed;
     public ArrayList<Integer> windDirection;
     public ArrayList<Integer> relativeHumidity;
     public ArrayList<Float> seaLevelPressure;

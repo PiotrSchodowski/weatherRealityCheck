@@ -57,7 +57,7 @@ public class MeteoBlueService {
         weatherForecastEntity.setForecastTime(forecastTime);
         weatherForecastEntity.setName(locationName);
         weatherForecastEntity.setTemperature(meteoBluePrediction.data1h.temperature.get(predictionTimeInt));
-        weatherForecastEntity.setWind(meteoBluePrediction.data1h.windSpeed.get(predictionTimeInt).floatValue());
+        weatherForecastEntity.setWind(meteoBluePrediction.data1h.windspeed.get(predictionTimeInt));
         weatherForecastEntity.setIntervalTime(predictionTimeInt);
         weatherForecastEntity.setSource("meteoBlue");
         weatherForecastEntity.setRainfallTotal(meteoBluePrediction.data1h.getConvective_precipitation().get(predictionTimeInt));
