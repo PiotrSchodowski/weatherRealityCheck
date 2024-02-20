@@ -18,40 +18,47 @@ public class ManageService {
     private final AccuWeatherService accuWeatherService;
     private final MeteoBlueService meteoBlueService;
     private final List<LocationTimePair> locationTimePairs;
-    List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
 
-    public ManageService(@Value("${locationName1}") String locationName1,
-                         @Value("${locationName2}") String locationName2,
-                         @Value("${predictionTime1}") String predictionTime1,
-                         @Value("${predictionTime2}") String predictionTime2,
-                         WeatherForecastRepository weatherForecastRepository,
-                         AccuWeatherService accuWeatherService,MeteoBlueService meteoBlueService){
-        this.locationTimePairs = Arrays.asList(
-                new LocationTimePair(locationName1, predictionTime1),
-                new LocationTimePair(locationName2, predictionTime2),
-                new LocationTimePair(locationName1, predictionTime2),
-                new LocationTimePair(locationName2, predictionTime1)
-        );
+    public ManageService(WeatherForecastRepository weatherForecastRepository,
+                         AccuWeatherService accuWeatherService,
+                         MeteoBlueService meteoBlueService,
+                         @Value("${locationNames}") String locationNames,
+                         @Value("${predictionTime}") String predictionTime) {
         this.weatherForecastRepository = weatherForecastRepository;
         this.accuWeatherService = accuWeatherService;
         this.meteoBlueService = meteoBlueService;
+
+        this.locationTimePairs = initializeLocationTimePairs(locationNames, predictionTime);
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
+        processLocationTimePairs();
+    }
+
+    private List<LocationTimePair> initializeLocationTimePairs(String locationNames, String predictionTime) {
+        String[] locations = locationNames.split(",");
+        List<LocationTimePair> pairs = new ArrayList<>();
+        for (String location : locations) {
+            pairs.add(new LocationTimePair(location, predictionTime));
+        }
+        return pairs;
+    }
+
+    private void processLocationTimePairs() {
+        List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
         for (LocationTimePair pair : locationTimePairs) {
             weatherForecastEntityList.addAll(distributor(pair));
-            saveEntities(weatherForecastEntityList);
         }
+        saveEntities(weatherForecastEntityList);
     }
-
 
     private List<WeatherForecastEntity> distributor(LocationTimePair pair) {
-        weatherForecastEntityList.add(accuWeatherService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
-        weatherForecastEntityList.add(meteoBlueService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime())); // limit callsow
-        return weatherForecastEntityList;
+        List<WeatherForecastEntity> entities = new ArrayList<>();
+        entities.add(accuWeatherService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
+        entities.add(meteoBlueService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
+        return entities;
     }
-
 
     private void saveEntities(List<WeatherForecastEntity> weatherForecastEntities) {
         for (WeatherForecastEntity weatherForecastEntity : weatherForecastEntities) {
@@ -59,4 +66,11 @@ public class ManageService {
         }
     }
 }
+
+
+
+
+
+
+
 

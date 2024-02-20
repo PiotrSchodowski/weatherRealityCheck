@@ -23,7 +23,7 @@ public class MeteoBlueService {
     @Value("${bielskoLat}")
     private String bielskoLat;
 
-    @Value("${bielskoLat}")
+    @Value("${bielskoLon}")
     private String bielskoLon;
 
     private final MeteoBlueFetcher meteoBlueFetcher;
@@ -48,7 +48,7 @@ public class MeteoBlueService {
         }
 
         LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime predictionDateTime = currentDateTime.plusHours(predictionTimeInt - 1);
+        LocalDateTime predictionDateTime = currentDateTime.plusHours(predictionTimeInt);
         String forecastDate = predictionDateTime.toLocalDate().toString();
         int forecastTime = predictionDateTime.getHour();
 
@@ -64,7 +64,5 @@ public class MeteoBlueService {
 
         return weatherForecastEntity;
     }
-
-
 
 }
