@@ -8,7 +8,6 @@ import pl.schodowski.weatherRealityCheck.model.LocationTimePair;
 import pl.schodowski.weatherRealityCheck.repository.WeatherForecastRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
