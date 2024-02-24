@@ -16,17 +16,20 @@ public class ManageService {
     private final WeatherForecastRepository weatherForecastRepository;
     private final AccuWeatherService accuWeatherService;
     private final MeteoBlueService meteoBlueService;
+
+    private final GoogleService googleService;
     private final List<LocationTimePair> locationTimePairs;
 
     public ManageService(WeatherForecastRepository weatherForecastRepository,
                          AccuWeatherService accuWeatherService,
                          MeteoBlueService meteoBlueService,
+                         GoogleService googleService,
                          @Value("${locationNames}") String locationNames,
                          @Value("${predictionTime}") String predictionTime) {
         this.weatherForecastRepository = weatherForecastRepository;
         this.accuWeatherService = accuWeatherService;
         this.meteoBlueService = meteoBlueService;
-
+        this.googleService = googleService;
         this.locationTimePairs = initializeLocationTimePairs(locationNames, predictionTime);
     }
 
@@ -56,6 +59,7 @@ public class ManageService {
         List<WeatherForecastEntity> entities = new ArrayList<>();
         entities.add(accuWeatherService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
         entities.add(meteoBlueService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
+        entities.add(googleService.getEntityFromPrediction(pair.getLocationName(), pair.getPredictionTime()));
         return entities;
     }
 

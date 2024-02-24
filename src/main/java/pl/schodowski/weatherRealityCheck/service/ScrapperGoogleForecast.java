@@ -12,8 +12,12 @@ import java.io.IOException;
 @Service
 public class ScrapperGoogleForecast {
 
-    public String getTemperatureForFirstMeasurement(String location) {
-        String url = "https://www.google.com/search?q=pogoda+zakopane&oq=pogoda+zako&gs_lcrp=EgZjaHJvbWUqDQgAEAAYgwEYsQMYgAQyDQgAEAAYgwEYsQMYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiPAjIHCAkQABiPAqgCALACAA&sourceid=chrome&ie=UTF-8";
+    public String getActualTemp(String location) {
+        String url = "https://www.google.com/search?q=pogoda+"
+                + location
+                + "&oq=pogoda+"
+                + location
+                + "&gs_lcrp=EgZjaHJvbWUqDQgAEAAYgwEYsQMYgAQyDQgAEAAYgwEYsQMYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiPAjIHCAkQABiPAqgCALACAA&sourceid=chrome&ie=UTF-8";
 
         try {
             Document document = Jsoup.connect(url).get();

@@ -19,13 +19,13 @@ public class ScrapperTest {
     void shouldReturnText(){
 
         String text, text2, text3;
-        text = scrapperGoogleForecast.getTemperatureForFirstMeasurement("zakopane");
-        text2 = scrapperGoogleForecast.getTemperatureForSecondMeasurement("zakopane");
-        text3 = scrapperGoogleForecast.getTemperatureForThirdMeasurement("zakopane");
+        text = scrapperGoogleForecast.getActualTemp("zakopane");
+//        text2 = scrapperGoogleForecast.getTemperatureForSecondMeasurement("zakopane");
+//        text3 = scrapperGoogleForecast.getTemperatureForThirdMeasurement("zakopane");
 
         System.out.println(text);
-        System.out.println(text2);
-        System.out.println(text3);
+//        System.out.println(text2);
+//        System.out.println(text3);
     }
 
 
