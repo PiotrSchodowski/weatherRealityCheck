@@ -2,6 +2,7 @@ package pl.schodowski.weatherRealityCheck.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
 import pl.schodowski.weatherRealityCheck.model.LocationTimePair;
@@ -33,7 +34,7 @@ public class ManageService {
         this.locationTimePairs = initializeLocationTimePairs(locationNames, predictionTime);
     }
 
-    @PostConstruct
+    @Scheduled(fixedRate = 3600000)
     public void init() {
         processLocationTimePairs();
     }
