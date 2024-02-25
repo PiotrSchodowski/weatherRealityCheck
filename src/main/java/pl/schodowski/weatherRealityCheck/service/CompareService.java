@@ -29,7 +29,8 @@ public class CompareService {
 
                     if (prediction.getTemperature() != measurement.getTemperature()) {
                         float temperatureDifference = prediction.getTemperature() - measurement.getTemperature();
-                        System.out.println("Różnica w temperaturze dla prognozy " + prediction.getName() +
+                        System.out.println("Roznica w temperaturze dla prognozy " + prediction.getName() + "(" +
+                                 prediction.getSource() + ")" +
                                 " o godzinie " + prediction.getForecastTime() + " wynosi: " +
                                 temperatureDifference);
                     }

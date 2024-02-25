@@ -35,17 +35,16 @@ public class ImgwDataFetcher {
     }
 
 
-    @Scheduled(cron = CRON_SCHEDULE)
+    @Scheduled(fixedRate = 3600000)
     public void updateRealWeather() {
         stations.forEach(this::saveImgwWeatherDataFromApi);
     }
 
 
-    @PostConstruct
-    public void init() {
-        stations.forEach(this::saveImgwWeatherDataFromApi);
-    }
-
+//    @PostConstruct
+//    public void init() {
+//        stations.forEach(this::saveImgwWeatherDataFromApi);
+//    }
 
     private void saveImgwWeatherDataFromApi(String station) {
         try {
