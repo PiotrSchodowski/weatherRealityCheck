@@ -23,7 +23,7 @@ public class GoogleService {
         weatherForecastEntity.setDate(currentDateTime.toLocalDate().toString());
         weatherForecastEntity.setIntervalTime(1);
         weatherForecastEntity.setName(locationName);
-        weatherForecastEntity.setTemperature(Float.parseFloat(scrapperGoogleForecast.getActualTemp(locationName)));
+        weatherForecastEntity.setTemperature(Float.parseFloat(scrapperGoogleForecast.downloadForecastForLocation(locationName, predictionTime)));
 
 
         return weatherForecastEntity;

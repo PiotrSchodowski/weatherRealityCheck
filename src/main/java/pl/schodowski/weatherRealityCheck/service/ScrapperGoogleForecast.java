@@ -6,71 +6,48 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 
 @Service
 public class ScrapperGoogleForecast {
 
-    public String getActualTemp(String location) {
-        String url = "https://www.google.com/search?q=pogoda+"
-                + location
-                + "&oq=pogoda+"
-                + location
-                + "&gs_lcrp=EgZjaHJvbWUqDQgAEAAYgwEYsQMYgAQyDQgAEAAYgwEYsQMYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiPAjIHCAkQABiPAqgCALACAA&sourceid=chrome&ie=UTF-8";
 
+    public String downloadForecastForLocation(String location, String predictionTime) {
+
+        String url = "https://www.google.com/search?q=" + location + "+pogoda";
+        String text = null;
+
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\48798\\Documents\\chrome-driver\\chromedriver-win64\\chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+        String pageSource = null;
+        
         try {
-            Document document = Jsoup.connect(url).get();
-            Element searchClass = document.selectFirst(".wob_t");
-            if (searchClass != null) {
-                String text = searchClass.text();
-                return text;
-            } else {
-                throw new RuntimeException("Nie można znaleźć prognozy pogody dla podanej lokalizacji: " + location);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Nie udało się pobrać danych");
+            driver.get(url);
+            WebElement acceptButton = driver.findElement(By.id("L2AGLb"));
+            acceptButton.click();
+            Thread.sleep(2000); // Użyj WebDriverWait dla lepszego rozwiązania
+            pageSource = driver.getPageSource();
+            
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
         }
+
+        Document doc = Jsoup.parse(pageSource);
+        Elements elements = doc.getElementsByClass("wob_t wob_gs_l" + predictionTime);
+
+        for (Element element : elements) {
+            String ariaLabel = element.attr("aria-label");
+            System.out.println(ariaLabel);
+            text = ariaLabel;
+        }
+        return text;
     }
 
-    public String getTemperatureForSecondMeasurement(String location) {
-
-        String url = "https://www.google.com/search?q=pogoda+zakopane&oq=pogoda+zako&gs_lcrp=EgZjaHJvbWUqDQgAEAAYgwEYsQMYgAQyDQgAEAAYgwEYsQMYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiPAjIHCAkQABiPAqgCALACAA&sourceid=chrome&ie=UTF-8";
-
-        try {
-            Document document = Jsoup.connect(url).get();
-            Element searchClass = document.selectFirst(".wob_gsvg");
-            if (searchClass != null) {
-                Element textElement = searchClass.selectFirst(".wob_t.wob_gs_l0");
-                if (textElement != null) {
-                    String textContent = textElement.text();
-                    return textContent;
-                } else {
-                    throw new RuntimeException("Nie można znaleźć elementu tekstowego z temperaturą w elemencie SVG.");
-                }
-            } else {
-                throw new RuntimeException("Nie można znaleźć prognozy pogody dla podanej lokalizacji: " + location);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Nie udało się pobrać danych");
-        }
-    }
-
-    public String getTemperatureForThirdMeasurement(String location) {
-        String url = "https://www.google.com/search?q=pogoda+" + location + "&oq=pogoda+" + location + "&gs_lcrp=EgZjaHJvbWUqDQgAEAAYgwEYsQMYgAQyDQgAEAAYgwEYsQMYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiPAjIHCAkQABiPAqgCALACAA&sourceid=chrome&ie=UTF-8";
-
-        try {
-            Document document = Jsoup.connect(url).get();
-            Elements measurementElements = document.select(".wob_t");
-            if (!measurementElements.isEmpty() && measurementElements.size() >= 16) {
-                Element seventhMeasurement = measurementElements.get(16);
-                String text = seventhMeasurement.text();
-                return text;
-            } else {
-                throw new RuntimeException("Nie można znaleźć siódmego pomiaru pogody dla podanej lokalizacji: " + location);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Nie udało się pobrać danych");
-        }
-    }
 }

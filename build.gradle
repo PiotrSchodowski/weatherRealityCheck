@@ -50,6 +50,8 @@ dependencies {
 	implementation "org.projectlombok:lombok:$lombokVersion"
 	annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
+	testImplementation 'org.seleniumhq.selenium:selenium-java:4.18.1'
+	implementation 'org.seleniumhq.selenium:selenium-java:4.18.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
