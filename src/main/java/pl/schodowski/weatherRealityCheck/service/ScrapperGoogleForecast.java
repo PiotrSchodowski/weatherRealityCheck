@@ -44,14 +44,20 @@ public class ScrapperGoogleForecast {
         acceptButton.click();
     }
 
+    private String extractTemperatureFromAriaLabel(String ariaLabel) {
+        int indexOfDegree = ariaLabel.indexOf("°");
+        String temperaturePart = ariaLabel.substring(0, indexOfDegree);
+        return temperaturePart.replaceAll("[^0-9-]", "");
+    }
+
     private String extractForecastFromPageSource(String pageSource, String predictionTime) {
         Document doc = Jsoup.parse(pageSource);
         Elements elements = doc.getElementsByClass("wob_t wob_gs_l" + predictionTime);
         for (Element element : elements) {
             String ariaLabel = element.attr("aria-label");
-            System.out.println(ariaLabel);
-            return ariaLabel;
+            return extractTemperatureFromAriaLabel(ariaLabel);
         }
         return null;
     }
+
 }

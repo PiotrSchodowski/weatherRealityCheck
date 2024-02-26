@@ -12,7 +12,7 @@ public class GoogleService {
 
     private final ScrapperGoogleForecast scrapperGoogleForecast;
 
-    public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {  //nie uzywane bo nie mam sposobu na pobranie NIE aktualnej godziny prognozy
+    public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {
 
         WeatherForecastEntity weatherForecastEntity = new WeatherForecastEntity();
 

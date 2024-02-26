@@ -49,6 +49,7 @@ public class ScrapperTest {
         String text;
 
         text = scrapperGoogleForecast.downloadForecastForLocation("zakopane", "3");
+        System.out.println(text);
 
     }
 
