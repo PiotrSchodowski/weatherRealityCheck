@@ -48,7 +48,7 @@ public class ScrapperTest {
 
         String text;
 
-        text = scrapperGoogleForecast.downloadForecastForLocation("zakopane", "24");
+        text = scrapperGoogleForecast.downloadForecastForLocation("zakopane", "3");
 
     }
 
