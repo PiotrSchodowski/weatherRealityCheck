@@ -5,10 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.schodowski.weatherRealityCheck.api.MeteoBlueFetcher;
 import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
-import pl.schodowski.weatherRealityCheck.model.meteoBlue.MeteoBluePrediction;
+import pl.schodowski.weatherRealityCheck.dto.meteoBlue.MeteoBluePrediction;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -29,22 +28,25 @@ public class MeteoBlueService {
     private final MeteoBlueFetcher meteoBlueFetcher;
 
     public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {
-
+        String lat, lon;
 
         if ("Zakopane".equals(locationName)) {
-            return buildEntityBasedPrediction(meteoBlueFetcher.getMeteoBluePredictionFromApi(zakopaneLon, zakopaneLat), locationName, predictionTime);
+            lat = zakopaneLat;
+            lon = zakopaneLon;
         } else {
-            return buildEntityBasedPrediction(meteoBlueFetcher.getMeteoBluePredictionFromApi(bielskoLon, zakopaneLat), locationName, predictionTime);
+            lat = bielskoLat;
+            lon = bielskoLon;
         }
 
+        MeteoBluePrediction prediction = meteoBlueFetcher.getMeteoBluePredictionFromApi(lon, lat);
+        return buildEntityBasedPrediction(prediction, locationName, predictionTime);
     }
 
-
-    WeatherForecastEntity buildEntityBasedPrediction(MeteoBluePrediction meteoBluePrediction, String locationName, String predictionTime) {
+    private WeatherForecastEntity buildEntityBasedPrediction(MeteoBluePrediction prediction, String locationName, String predictionTime) {
         int predictionTimeInt = Integer.parseInt(predictionTime);
 
-        if (predictionTimeInt < 0 || predictionTimeInt >= meteoBluePrediction.data1h.time.size()) {
-            throw new IllegalArgumentException("Nieprawidłowy czas prognozy. Upewnij się, że mieści się on w zakresie prognozy.");
+        if (predictionTimeInt < 0 || predictionTimeInt >= prediction.data1h.time.size()) {
+            throw new IllegalArgumentException("Invalid prediction time. Make sure it is within the prediction range.");
         }
 
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -56,13 +58,12 @@ public class MeteoBlueService {
         weatherForecastEntity.setDate(forecastDate);
         weatherForecastEntity.setForecastTime(forecastTime);
         weatherForecastEntity.setName(locationName);
-        weatherForecastEntity.setTemperature(meteoBluePrediction.data1h.temperature.get(predictionTimeInt));
-        weatherForecastEntity.setWind(meteoBluePrediction.data1h.windspeed.get(predictionTimeInt));
+        weatherForecastEntity.setTemperature(prediction.data1h.temperature.get(predictionTimeInt));
+        weatherForecastEntity.setWind(prediction.data1h.windspeed.get(predictionTimeInt));
         weatherForecastEntity.setIntervalTime(predictionTimeInt);
         weatherForecastEntity.setSource("meteoBlue");
-        weatherForecastEntity.setRainfallTotal(meteoBluePrediction.data1h.getConvective_precipitation().get(predictionTimeInt));
+        weatherForecastEntity.setRainfallTotal(prediction.data1h.getConvective_precipitation().get(predictionTimeInt));
 
         return weatherForecastEntity;
     }
-
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.schodowski.weatherRealityCheck.api.AccuWeatherFetcher;
 import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
-import pl.schodowski.weatherRealityCheck.model.accuWeather.AccuWeatherPrediction;
+import pl.schodowski.weatherRealityCheck.dto.accuWeather.AccuWeatherPrediction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,50 +15,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccuWeatherService {
 
+    private final AccuWeatherFetcher accuWeatherFetcher;
+
     @Value("${zakopaneLocationForAccuWeather}")
     private String locationKeyForZakopane;
 
     @Value("${bielskoLocationForAccuWeather}")
     private String locationKeyForBielsko;
 
-    private final AccuWeatherFetcher accuWeatherFetcher;
-
-    public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime){
-
-        String locationKey;
-        int predictionTimeInt = Integer.parseInt(predictionTime);
-
-        locationKey = "Zakopane".equals(locationName) ? locationKeyForZakopane : locationKeyForBielsko;
+    public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {
+        String locationKey = getLocationKey(locationName);
         List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
-
-        return buildEntityBasedPrediction(accuWeatherPredictions.get(predictionTimeInt - 1), locationName);
+        int predictionTimeInt = Integer.parseInt(predictionTime);
+        return buildEntityBasedOnPrediction(accuWeatherPredictions.get(predictionTimeInt - 1), locationName);
     }
 
 
-    WeatherForecastEntity buildEntityBasedPrediction(AccuWeatherPrediction accuWeatherPrediction, String locationName) {
+    private String getLocationKey(String locationName) {
+        return "Zakopane".equals(locationName) ? locationKeyForZakopane : locationKeyForBielsko;
+    }
 
-        WeatherForecastEntity weatherForecastEntity = new WeatherForecastEntity();
+
+    private WeatherForecastEntity buildEntityBasedOnPrediction(AccuWeatherPrediction accuWeatherPrediction, String locationName) {
         LocalDateTime dateTime = LocalDateTime.parse(accuWeatherPrediction.dateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        String forecastDate = dateTime.toLocalDate().toString();
-        int forecastTime = dateTime.getHour();
-
-        weatherForecastEntity.setDate(forecastDate);
-        weatherForecastEntity.setForecastTime(forecastTime);
+        WeatherForecastEntity weatherForecastEntity = new WeatherForecastEntity();
+        weatherForecastEntity.setDate(dateTime.toLocalDate().toString());
+        weatherForecastEntity.setForecastTime(dateTime.getHour());
         weatherForecastEntity.setName(locationName);
         weatherForecastEntity.setTemperature(accuWeatherPrediction.temperature.value);
         weatherForecastEntity.setWind(convertKmhToMs(accuWeatherPrediction.wind.speed.value));
         weatherForecastEntity.setIntervalTime(calculateIntervalTime(dateTime));
         weatherForecastEntity.setSource("AccuWeather");
         setRainfallTotal(weatherForecastEntity, accuWeatherPrediction);
-
         return weatherForecastEntity;
     }
 
 
     private float calculateIntervalTime(LocalDateTime forecastDateTime) {
-        LocalDateTime nowDateTime = LocalDateTime.now();
-        float intervalTime = forecastDateTime.getHour() - nowDateTime.getHour();
-        return Math.abs(intervalTime);
+        return Math.abs(forecastDateTime.getHour() - LocalDateTime.now().getHour());
     }
 
 

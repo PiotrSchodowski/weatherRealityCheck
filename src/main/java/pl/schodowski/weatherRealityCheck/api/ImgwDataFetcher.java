@@ -1,6 +1,5 @@
 package pl.schodowski.weatherRealityCheck.api;
 
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -24,9 +23,6 @@ public class ImgwDataFetcher {
     private static final Logger log = LoggerFactory.getLogger(ImgwDataFetcher.class);
     private final List<String> stations = Arrays.asList("zakopane", "bielskobiala");
 
-    private static final String CRON_SCHEDULE = "0 0 */4 * * *"; // 4 hours
-//    private static final String CRON_SCHEDULE = "0 */5 * * * *"; 5 minutes
-
 
     public ImgwDataFetcher(RestTemplate restTemplate, ImgwWeatherDataRepository repository) {
         this.restTemplate = restTemplate;
@@ -35,16 +31,10 @@ public class ImgwDataFetcher {
     }
 
 
-    @Scheduled(fixedRate = 3600000)
     public void updateRealWeather() {
         stations.forEach(this::saveImgwWeatherDataFromApi);
     }
 
-
-//    @PostConstruct
-//    public void init() {
-//        stations.forEach(this::saveImgwWeatherDataFromApi);
-//    }
 
     private void saveImgwWeatherDataFromApi(String station) {
         try {

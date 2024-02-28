@@ -1,4 +1,4 @@
-package pl.schodowski.weatherRealityCheck.model.meteoBlue;
+package pl.schodowski.weatherRealityCheck.dto.meteoBlue;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

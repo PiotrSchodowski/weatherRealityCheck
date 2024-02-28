@@ -1,4 +1,4 @@
-package pl.schodowski.weatherRealityCheck.model.accuWeather;
+package pl.schodowski.weatherRealityCheck.dto.accuWeather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

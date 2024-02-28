@@ -21,10 +21,9 @@ public class GoogleService {
         weatherForecastEntity.setSource("google");
         weatherForecastEntity.setForecastTime(currentDateTime.getHour() + 1);
         weatherForecastEntity.setDate(currentDateTime.toLocalDate().toString());
-        weatherForecastEntity.setIntervalTime(1);
+        weatherForecastEntity.setIntervalTime(Integer.parseInt(predictionTime));
         weatherForecastEntity.setName(locationName);
         weatherForecastEntity.setTemperature(Float.parseFloat(scrapperGoogleForecast.downloadForecastForLocation(locationName, predictionTime)));
-
 
         return weatherForecastEntity;
 

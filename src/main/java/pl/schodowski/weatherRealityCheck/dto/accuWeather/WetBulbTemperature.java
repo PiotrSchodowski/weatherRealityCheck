@@ -1,4 +1,4 @@
-package pl.schodowski.weatherRealityCheck.model.accuWeather;
+package pl.schodowski.weatherRealityCheck.dto.accuWeather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Evapotranspiration{
+public class WetBulbTemperature{
     @JsonProperty("Value")
     public double value;
     @JsonProperty("Unit")

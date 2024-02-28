@@ -1,6 +1,5 @@
 package pl.schodowski.weatherRealityCheck.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WeatherForecastEntity {
 
-    @JsonProperty("id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;

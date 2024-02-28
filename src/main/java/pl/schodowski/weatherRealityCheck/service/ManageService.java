@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.schodowski.weatherRealityCheck.entity.WeatherForecastEntity;
-import pl.schodowski.weatherRealityCheck.model.LocationTimePair;
+import pl.schodowski.weatherRealityCheck.dto.LocationTimePair;
 import pl.schodowski.weatherRealityCheck.repository.WeatherForecastRepository;
 
 import java.util.ArrayList;
@@ -33,10 +33,14 @@ public class ManageService {
         this.locationTimePairs = initializeLocationTimePairs(locationNames, predictionTime);
     }
 
-    @Scheduled(fixedRate = 3600000)
-    public void init() {
-        processLocationTimePairs();
+    public void processLocationTimePairs() {
+        List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
+        for (LocationTimePair pair : locationTimePairs) {
+            weatherForecastEntityList.addAll(distributor(pair));
+        }
+        saveEntities(weatherForecastEntityList);
     }
+
 
     private List<LocationTimePair> initializeLocationTimePairs(String locationNames, String predictionTime) {
         String[] locations = locationNames.split(",");
@@ -47,13 +51,6 @@ public class ManageService {
         return pairs;
     }
 
-    private void processLocationTimePairs() {
-        List<WeatherForecastEntity> weatherForecastEntityList = new ArrayList<>();
-        for (LocationTimePair pair : locationTimePairs) {
-            weatherForecastEntityList.addAll(distributor(pair));
-        }
-        saveEntities(weatherForecastEntityList);
-    }
 
     private List<WeatherForecastEntity> distributor(LocationTimePair pair) {
         List<WeatherForecastEntity> entities = new ArrayList<>();

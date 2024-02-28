@@ -1,4 +1,4 @@
-package pl.schodowski.weatherRealityCheck.model.accuWeather;
+package pl.schodowski.weatherRealityCheck.dto.accuWeather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TotalLiquid{
+public class Temperature{
     @JsonProperty("Value")
-    public double value;
+    public float value;
     @JsonProperty("Unit")
     public String unit;
     @JsonProperty("UnitType")

@@ -1,4 +1,4 @@
-package pl.schodowski.weatherRealityCheck.model.meteoBlue;
+package pl.schodowski.weatherRealityCheck.dto.meteoBlue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

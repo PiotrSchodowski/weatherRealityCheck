@@ -33,13 +33,7 @@ public class CompareService {
                     if (prediction.getTemperature() != measurement.getTemperature()) {
                         float temperatureDifference = prediction.getTemperature() - measurement.getTemperature();
 
-                        // Zapis różnicy nominalnej do bazy danych
-                        DifferenceForMeasurementsEntity diffEntity = new DifferenceForMeasurementsEntity();
-                        diffEntity.setTempByPercentage(temperatureDifference);
-                        diffEntity.setDate(prediction.getDate());
-                        diffEntity.setSource(prediction.getSource());
-                        diffEntity.setTemperatureDifference(prediction.getTemperature());
-                        diffEntity.setTime(prediction.getForecastTime());
+                        DifferenceForMeasurementsEntity diffEntity = getDifferenceForMeasurementsEntity(prediction, measurement, temperatureDifference);
                         diffForMeasurementsRepository.save(diffEntity);
 
                         System.out.println("Roznica w temperaturze dla prognozy " + prediction.getName() + "(" +
@@ -50,5 +44,16 @@ public class CompareService {
                 }
             }
         }
+    }
+
+    private static DifferenceForMeasurementsEntity getDifferenceForMeasurementsEntity(WeatherForecastEntity prediction, ImgwWeatherDataEntity measurement, float temperatureDifference) {
+        DifferenceForMeasurementsEntity diffEntity = new DifferenceForMeasurementsEntity();
+        diffEntity.setDate(prediction.getDate());
+        diffEntity.setSource(prediction.getSource());
+        diffEntity.setTemperatureDifference(temperatureDifference);
+        diffEntity.setTemperatureForecast(prediction.getTemperature());
+        diffEntity.setTemperatureMeasurement(measurement.getTemperature());
+        diffEntity.setTime(prediction.getForecastTime());
+        return diffEntity;
     }
 }
