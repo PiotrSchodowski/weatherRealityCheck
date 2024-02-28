@@ -32,20 +32,20 @@ public class CompareService {
 
                     if (prediction.getTemperature() != measurement.getTemperature()) {
                         float temperatureDifference = prediction.getTemperature() - measurement.getTemperature();
-                        float temperaturePercentageDiff = (temperatureDifference / measurement.getTemperature()) * 100;
 
-                        // Zapis różnicy procentowej do bazy danych
+                        // Zapis różnicy nominalnej do bazy danych
                         DifferenceForMeasurementsEntity diffEntity = new DifferenceForMeasurementsEntity();
-                        diffEntity.setTempByPercentage(temperaturePercentageDiff);
+                        diffEntity.setTempByPercentage(temperatureDifference);
                         diffEntity.setDate(prediction.getDate());
                         diffEntity.setSource(prediction.getSource());
+                        diffEntity.setTemperatureDifference(prediction.getTemperature());
+                        diffEntity.setTime(prediction.getForecastTime());
                         diffForMeasurementsRepository.save(diffEntity);
 
                         System.out.println("Roznica w temperaturze dla prognozy " + prediction.getName() + "(" +
                                 prediction.getSource() + ")" +
                                 " o godzinie " + prediction.getForecastTime() + " wynosi: " +
                                 temperatureDifference);
-                        System.out.println("Roznica procentowa w temperaturze: " + temperaturePercentageDiff + "%");
                     }
                 }
             }
