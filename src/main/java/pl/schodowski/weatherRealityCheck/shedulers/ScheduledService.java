@@ -10,8 +10,8 @@ import pl.schodowski.weatherRealityCheck.service.ManageService;
 @RequiredArgsConstructor
 public class ScheduledService {
 
-    private ImgwDataFetcher imgwDataFetcher;
-    private ManageService manageService;
+    private final ImgwDataFetcher imgwDataFetcher;
+    private final ManageService manageService;
 
     @Scheduled(fixedRate = 3600000)
     public void doRepetitions(){
