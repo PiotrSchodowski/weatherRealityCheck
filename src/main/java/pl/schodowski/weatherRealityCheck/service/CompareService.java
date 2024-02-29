@@ -20,7 +20,6 @@ public class CompareService {
     private final ImgwWeatherDataRepository imgwWeatherDataRepository;
     private final DiffForMeasurementsRepository diffForMeasurementsRepository;
 
-    @Scheduled(fixedRate = 3600000)
     public void comparePredictionsWithMeasurements() {
         List<WeatherForecastEntity> predictions = weatherForecastRepository.findAll();
         List<ImgwWeatherDataEntity> measurements = imgwWeatherDataRepository.findAll();
@@ -30,7 +29,8 @@ public class CompareService {
                 if (prediction.getDate().equals(measurement.getDate()) &&
                         prediction.getForecastTime() == Float.parseFloat(measurement.getTimeOfMeasurement())) {
 
-                    if (prediction.getTemperature() != measurement.getTemperature()) {
+                    if (prediction.getSource().length() == measurement.getName().length() ||
+                            prediction.getSource().length() == measurement.getName().length() - 1) {
                         float temperatureDifference = prediction.getTemperature() - measurement.getTemperature();
 
                         DifferenceForMeasurementsEntity diffEntity = getDifferenceForMeasurementsEntity(prediction, measurement, temperatureDifference);
