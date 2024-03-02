@@ -25,4 +25,5 @@ public class DifferenceForMeasurementsEntity {
     private String date;
     private float time;
     private String source;
+    private String name;
 }

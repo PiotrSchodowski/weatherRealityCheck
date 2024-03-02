@@ -29,8 +29,8 @@ public class CompareService {
                 if (prediction.getDate().equals(measurement.getDate()) &&
                         prediction.getForecastTime() == Float.parseFloat(measurement.getTimeOfMeasurement())) {
 
-                    if (prediction.getSource().length() == measurement.getName().length() ||
-                            prediction.getSource().length() == measurement.getName().length() - 1) {
+                    if (prediction.getName().length() == measurement.getName().length() ||
+                            prediction.getName().length() == measurement.getName().length() - 1) {
                         float temperatureDifference = prediction.getTemperature() - measurement.getTemperature();
 
                         DifferenceForMeasurementsEntity diffEntity = getDifferenceForMeasurementsEntity(prediction, measurement, temperatureDifference);
@@ -48,6 +48,7 @@ public class CompareService {
 
     private static DifferenceForMeasurementsEntity getDifferenceForMeasurementsEntity(WeatherForecastEntity prediction, ImgwWeatherDataEntity measurement, float temperatureDifference) {
         DifferenceForMeasurementsEntity diffEntity = new DifferenceForMeasurementsEntity();
+        diffEntity.setName(prediction.getName());
         diffEntity.setDate(prediction.getDate());
         diffEntity.setSource(prediction.getSource());
         diffEntity.setTemperatureDifference(temperatureDifference);
