@@ -20,8 +20,8 @@ public class DifferenceForMeasurementsEntity {
     Long id;
 
     private float temperatureDifference;
-    private float temperatureForecast;
-    private float temperatureMeasurement;
+    private float windDifference;
+    private float rainfallTotalDifference;
     private String date;
     private float time;
     private String source;
