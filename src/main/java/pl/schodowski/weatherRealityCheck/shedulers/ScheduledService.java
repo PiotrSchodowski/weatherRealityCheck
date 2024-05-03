@@ -17,8 +17,8 @@ public class ScheduledService {
 
     @Scheduled(fixedRate = 3600000)
     public void doRepetitions(){
-        imgwDataFetcher.updateRealWeather();
-        manageService.processLocationTimePairs();
+//        imgwDataFetcher.updateRealWeather();
+//        manageService.processLocationTimePairs();
         weatherComparisonService.comparePredictionsWithMeasurements();
     }
 }

@@ -30,7 +30,7 @@ public class MeteoBlueService {
     public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {
         String lat, lon;
 
-        if ("Zakopane".equals(locationName)) {
+        if ("Poronin".equals(locationName)) {
             lat = zakopaneLat;
             lon = zakopaneLon;
         } else {
@@ -58,11 +58,11 @@ public class MeteoBlueService {
         weatherForecastEntity.setDate(forecastDate);
         weatherForecastEntity.setForecastTime(forecastTime);
         weatherForecastEntity.setName(locationName);
-        weatherForecastEntity.setTemperature(prediction.data1h.temperature.get(predictionTimeInt));
-        weatherForecastEntity.setWind(prediction.data1h.windspeed.get(predictionTimeInt));
+        weatherForecastEntity.setTemperature(prediction.data1h.temperature.get(forecastTime));
+        weatherForecastEntity.setWind(prediction.data1h.windspeed.get(forecastTime));
         weatherForecastEntity.setIntervalTime(predictionTimeInt);
         weatherForecastEntity.setSource("meteoBlue");
-        weatherForecastEntity.setRainfallTotal(prediction.data1h.getConvective_precipitation().get(predictionTimeInt));
+        weatherForecastEntity.setRainfallTotal(prediction.data1h.getConvective_precipitation().get(forecastTime));
 
         return weatherForecastEntity;
     }

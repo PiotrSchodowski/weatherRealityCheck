@@ -27,7 +27,8 @@ public class AccuWeatherService {
         String locationKey = getLocationKey(locationName);
         List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
         int predictionTimeInt = Integer.parseInt(predictionTime);
-        return buildEntityBasedOnPrediction(accuWeatherPredictions.get(predictionTimeInt - 1), locationName);
+        int alignmentToFirstRowInTheTable = 1;
+        return buildEntityBasedOnPrediction(accuWeatherPredictions.get(predictionTimeInt - alignmentToFirstRowInTheTable), locationName);
     }
 
 

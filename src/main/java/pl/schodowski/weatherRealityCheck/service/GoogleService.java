@@ -23,7 +23,9 @@ public class GoogleService {
         weatherForecastEntity.setDate(currentDateTime.toLocalDate().toString());
         weatherForecastEntity.setIntervalTime(Integer.parseInt(predictionTime));
         weatherForecastEntity.setName(locationName);
-        weatherForecastEntity.setTemperature(Float.parseFloat(scrapperGoogleForecast.downloadForecastForLocation(locationName, predictionTime)));
+        weatherForecastEntity.setTemperature(Float.parseFloat(scrapperGoogleForecast.downloadForecastForLocation(locationName, predictionTime))); //todo scrapper mistake?
+        weatherForecastEntity.setRainfallTotal(0); //todo scrapper
+        weatherForecastEntity.setWind(0); //todo scrapper
 
         return weatherForecastEntity;
 
