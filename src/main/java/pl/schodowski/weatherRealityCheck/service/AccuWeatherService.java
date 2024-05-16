@@ -23,6 +23,9 @@ public class AccuWeatherService {
     @Value("${bielskoLocationForAccuWeather}")
     private String locationKeyForBielsko;
 
+    @Value("${laziskaLocationForAccuWeather}")
+    private String locationKeyForLaziska;
+
     public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {
         String locationKey = getLocationKey(locationName);
         List<AccuWeatherPrediction> accuWeatherPredictions = accuWeatherFetcher.getAccuWeatherPredictionFromApi(locationKey);
@@ -33,7 +36,7 @@ public class AccuWeatherService {
 
 
     private String getLocationKey(String locationName) {
-        return "Zakopane".equals(locationName) ? locationKeyForZakopane : locationKeyForBielsko;
+        return "Zakopane".equals(locationName) ? locationKeyForZakopane : locationKeyForLaziska;
     }
 
 

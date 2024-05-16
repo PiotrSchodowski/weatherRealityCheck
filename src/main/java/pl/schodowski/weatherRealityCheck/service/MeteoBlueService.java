@@ -25,6 +25,12 @@ public class MeteoBlueService {
     @Value("${bielskoLon}")
     private String bielskoLon;
 
+    @Value("${laziskaLat}")
+    private String laziskaLat;
+
+    @Value("${laziskaLon}")
+    private String laziskaLon;
+
     private final MeteoBlueFetcher meteoBlueFetcher;
 
     public WeatherForecastEntity getEntityFromPrediction(String locationName, String predictionTime) {
@@ -34,8 +40,8 @@ public class MeteoBlueService {
             lat = zakopaneLat;
             lon = zakopaneLon;
         } else {
-            lat = bielskoLat;
-            lon = bielskoLon;
+            lat = laziskaLat;
+            lon = laziskaLon;
         }
 
         MeteoBluePrediction prediction = meteoBlueFetcher.getMeteoBluePredictionFromApi(lon, lat);
